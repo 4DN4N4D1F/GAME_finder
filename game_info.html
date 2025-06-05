@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Info Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto 40px auto;
+            background: rgba(30,34,45,0.92);
+            padding: 44px 30px 30px 30px;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(30,34,45,0.45);
+            border: 2px solid #00e0ff;
+            position: relative;
+            z-index: 2;
+        }
+        h1 {
+            text-align: center;
+            font-weight: 900;
+            color: #00e0ff;
+            letter-spacing: 2px;
+            margin-bottom: 18px;
+            font-size: 2.7rem;
+            text-shadow: 0 2px 16px #00e0ff44;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        input[type="text"] {
+            padding: 14px 22px;
+            font-size: 20px;
+            border-radius: 12px;
+            border: 2px solid #00e0ff;
+            background: rgba(40,44,52,0.85);
+            color: #00e0ff;
+            font-weight: 700;
+            width: 340px;
+            margin-right: 10px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: #fff;
+            box-shadow: 0 0 0 2px #00e0ff55;
+        }
+        button {
+            padding: 14px 32px;
+            font-size: 20px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #00e0ff 0%, #2a5298 100%);
+            color: #fff;
+            font-weight: 900;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 12px #00e0ff33;
+            transition: background 0.2s, transform 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #2a5298 0%, #00e0ff 100%);
+            transform: translateY(-2px) scale(1.04);
+        }
+        .game-list {
+            margin: 30px 0 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .game-list li {
+            background: linear-gradient(90deg, #00e0ff33 0%, #2a5298 100%);
+            margin-bottom: 18px;
+            padding: 18px 18px 18px 24px;
+            border-radius: 14px;
+            box-shadow: 0 1px 8px #00e0ff22;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .game-list li.selected, .game-list li:hover {
+            box-shadow: 0 4px 24px #00e0ff66;
+            background: linear-gradient(90deg, #2a5298 0%, #00e0ff 100%);
+            transform: translateY(-2px) scale(1.01);
+        }
+        .game-title {
+            font-weight: 900;
+            color: #fff;
+            font-size: 1.2em;
+            letter-spacing: 1px;
+        }
+        .game-year {
+            color: #00e0ff;
+            font-weight: 700;
+            margin-left: 18px;
+        }
+        .game-rating {
+            color: #ffeb3b;
+            font-weight: 700;
+            margin-left: 18px;
+        }
+        .game-platforms {
+            color: #ffb300;
+            font-weight: 700;
+            margin-left: 18px;
+        }
+        .select-btn {
+            background: #fff;
+            color: #2a5298;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            margin-left: 18px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .select-btn:hover {
+            background: #00e0ff;
+            color: #fff;
+        }
+        .details-panel {
+            margin-top: 36px;
+            background: linear-gradient(135deg, #2a5298 0%, #00e0ff 100%);
+            border-radius: 18px;
+            padding: 32px 28px;
+            box-shadow: 0 4px 32px #00e0ff44;
+            color: #fff;
+            font-size: 1.15rem;
+            animation: fadeIn 1s;
+        }
+        .details-panel h2 {
+            color: #ffeb3b;
+            font-size: 2rem;
+            margin-bottom: 18px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+        .details-panel a {
+            color: #fff;
+            text-decoration: underline;
+            font-weight: 700;
+        }
+        .download-links {
+            margin-top: 18px;
+        }
+        .download-links a {
+            display: inline-block;
+            margin-right: 18px;
+            margin-bottom: 8px;
+            padding: 10px 22px;
+            border-radius: 8px;
+            background: #00e0ff;
+            color: #2a5298;
+            font-weight: 900;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        .download-links a:hover {
+            background: #ffeb3b;
+            color: #2a5298;
+        }
+        .requirements {
+            margin-top: 18px;
+            background: rgba(0,224,255,0.08);
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        .req-title {
+            color: #ffeb3b;
+            font-weight: 800;
+            font-size: 1.1em;
+        }
+        #author-anim-bottom {
+            text-align:center;
+            margin:32px 0 18px 0;
+            font-size:2rem;
+            font-weight:900;
+            letter-spacing:0.18em;
+            color:#00e0ff;
+            text-shadow:0 2px 16px #00e0ff44;
+        }
+        /* Popup and social styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(30, 60, 120, 0.75);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .popup-content {
+            background: #232a3b;
+            border-radius: 18px;
+            padding: 36px 32px 28px 32px;
+            box-shadow: 0 8px 32px #00e0ff66;
+            text-align: center;
+            color: #fff;
+            max-width: 90vw;
+            min-width: 320px;
+            animation: fadeIn 0.7s;
+        }
+        .popup-content h2 {
+            color: #00e0ff;
+            margin-bottom: 18px;
+            font-size: 2rem;
+        }
+        .popup-content p {
+            font-size: 1.2rem;
+            margin-bottom: 22px;
+        }
+        .popup-btn {
+            padding: 12px 32px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #00e0ff 0%, #2a5298 100%);
+            color: #fff;
+            font-weight: 900;
+            border: none;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .popup-btn:hover {
+            background: linear-gradient(90deg, #2a5298 0%, #00e0ff 100%);
+            transform: scale(1.05);
+        }
+        .social-links {
+            position: fixed;
+            top: 18px;
+            right: 24px;
+            z-index: 100;
+        }
+        .social-links a {
+            display: inline-block;
+            margin-left: 12px;
+            color: #00e0ff;
+            font-size: 2rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .social-links a:hover {
+            color: #ffeb3b;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @media (max-width: 700px) {
+            .container { padding: 10px 2px; }
+            h1 { font-size: 1.3rem; }
+            .details-panel { padding: 12px 6px; }
+            input[type="text"] { width: 120px; }
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <!-- Social links (top right) -->
+    <div class="social-links">
+        <a href="https://t.me/secdetgamezone" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+        <a href="https://facebook.com/SECDET.404" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+    </div>
+
+    <!-- Telegram group popup -->
+    <div class="popup-overlay" id="tg-popup">
+        <div class="popup-content">
+            <h2>Join Our Telegram Group!</h2>
+            <p>Stay updated and connect with the community.<br>
+            <b>Group Name:</b> <span style="color:#00e0ff;">SECDET GAMEZONE</span></p>
+            <button class="popup-btn" onclick="window.open('https://t.me/secdetgamezone', '_blank')">Join Telegram</button>
+            <button class="popup-btn" onclick="document.getElementById('tg-popup').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>🎮 Game Info Finder</h1>
+        <form method="post">
+            <input type="text" name="query" placeholder="Search for a game..." required value="{{ request.form.get('query', '') }}">
+            <button type="submit">Search</button>
+        </form>
+        {% if games %}
+        <ul class="game-list">
+            {% for game in games %}
+            <li class="{% if selected_idx and loop.index0 == selected_idx|int %}selected{% endif %}">
+                <span>
+                    <span class="game-title">{{ game.name }}</span>
+                    <span class="game-year">({{ game.released or 'N/A' }})</span>
+                    <span class="game-rating">⭐ {{ game.rating or 'N/A' }}</span>
+                    <span class="game-platforms">
+                        {% for p in game.platforms %}
+                            {{ p.platform.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </span>
+                </span>
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="query" value="{{ request.form.get('query', '') }}">
+                    <input type="hidden" name="selected_idx" value="{{ loop.index0 }}">
+                    <button class="select-btn" type="submit">Show Details</button>
+                </form>
+                {% if selected_idx and loop.index0 == selected_idx|int and details %}
+                <div class="details-panel">
+                    <h2>{{ details.name }}</h2>
+                    <p><b>Release Date:</b> {{ details.released or 'N/A' }}</p>
+                    <p><b>Rating:</b> {{ details.rating or 'N/A' }}</p>
+                    <p><b>Metacritic:</b> {{ details.metacritic or 'N/A' }}</p>
+                    <p><b>Genres:</b>
+                        {% for g in details.genres %}
+                            {{ g.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><b>Developers:</b>
+                        {% for d in details.developers %}
+                            {{ d.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><b>Publishers:</b>
+                        {% for p in details.publishers %}
+                            {{ p.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><b>Budget:</b> N/A</p>
+                    <p><b>Lifetime Collection:</b> N/A</p>
+                    <p><b>Description:</b> {{ details.description_raw[:400] }}...</p>
+                    <p><b>Official Website:</b>
+                        {% if details.website %}
+                            <a href="{{ details.website }}" target="_blank">{{ details.website }}</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+                    <div class="requirements">
+                        <div class="req-title">Minimum System Requirements:</div>
+                        {% for plat in details.platforms %}
+                            {% if plat.requirements and plat.requirements.minimum %}
+                                <div><b>{{ plat.platform.name }}:</b> {{ plat.requirements.minimum }}</div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="req-title" style="margin-top:10px;">Recommended System Requirements:</div>
+                        {% for plat in details.platforms %}
+                            {% if plat.requirements and plat.requirements.recommended %}
+                                <div><b>{{ plat.platform.name }}:</b> {{ plat.requirements.recommended }}</div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="req-title" style="margin-top:10px;">Game Size:</div>
+                        {% if details.clip and details.clip.size %}
+                            <div>{{ details.clip.size }}</div>
+                        {% else %}
+                            <div>N/A</div>
+                        {% endif %}
+                    </div>
+                    <div class="download-links">
+                        <a href="{{ fitgirl_link }}" target="_blank">FitGirl Download</a>
+                        <a href="{{ dodi_link }}" target="_blank">DODI Download</a>
+                    </div>
+                </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <div id="author-anim-bottom"></div>
+   <script>
+    // Author animation at the bottom
+    const author2 = "ADNAN ADIF HISHAM";
+    const animDiv2 = document.getElementById("author-anim-bottom");
+    let j = 0;
+    function typeAuthorBottom() {
+        if (j <= author2.length) {
+            animDiv2.innerHTML = author2.slice(0, j) + '<span style="opacity:0.4;">' + author2.slice(j, author2.length) + '</span>';
+            j++;
+            setTimeout(typeAuthorBottom, 150);
+        }
+    }
+    typeAuthorBottom();
+
+    // Show Telegram popup only once per user (per browser)
+    window.onload = function() {
+        if (!localStorage.getItem('tg_popup_shown')) {
+            document.getElementById('tg-popup').style.display = 'flex';
+            localStorage.setItem('tg_popup_shown', '1');
+        }
+    };
+    </script>
+</body>
+</html>
